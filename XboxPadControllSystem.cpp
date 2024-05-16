@@ -44,7 +44,7 @@ namespace XPC
             //SHORT leftJoyY = state->Gamepad.sThumbLY;
             //addToVector(*joystickDataCollector, leftJoyX);
             //addToVector(*joystickDataCollector, leftJoyY);
-        }else{std::cout << "pad rozłączony" << std::endl;}
+        }else{std::cout << "pad offline" << std::endl;}
     }
     void XboxPadControllSystem::printJoystickData() {
         {

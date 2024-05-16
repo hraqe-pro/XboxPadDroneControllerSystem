@@ -11,15 +11,17 @@
 int main()
 {
 
-    SUDP::ServerUDP();
+    SUDP::ServerUDP server_udp;
 
     //XPC::XboxPadControllSystem->joystickDataCollector();
     XPC::XboxPadControllSystem xboxController;
-    while(true)
+
+    /*while(true)
     {
         xboxController.update();
         xboxController.printJoystickData();
-    }
+    }*/
+
 
 
 

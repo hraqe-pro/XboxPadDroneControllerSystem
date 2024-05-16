@@ -13,37 +13,60 @@
 
 namespace SUDP
 {
+    void ServerUDP::send_to_client(SOCKET serverSocket, sockaddr_in *clientService, XPC::JoysticksData *data)
+    {
+    }
 
     ServerUDP::ServerUDP()
     {
-
+        service = std::make_unique<sockaddr_in>();
+        data = std::make_unique<XPC::JoysticksData>();
+        sockadress_structure_ptr = std::make_unique<sockaddr>();
         WSADATA wsaData;
-
-        WORD wVersionRequested = MAKEWORD(2, 2);
-        int wsaerr = WSAStartup(wVersionRequested, &wsaData);
+        if (WSAStartup(MAKEWORD(2, 2), &wsaData) !=0)
+        {
+            std::cerr << "winsock not initialized" << std::endl;
+            exit(1);
+        }else{std::cout<<"winsock initialized" << std::endl;}
         //here we initialize WINSOCK
 
-        SOCKET serverSocket = INVALID_SOCKET;
-        serverSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+        auto serverSocket = INVALID_SOCKET;
+
+        if((serverSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==INVALID_SOCKET)
+        {
+            std::cerr << "socket not created" << std::endl;
+            closesocket(serverSocket);
+            WSACleanup();
+            exit(1);
+        }else{std::cout << "socket created" << std::endl;}
+
+
         //here we create SOCKET
-        std::unique_ptr<sockaddr_in> service(new sockaddr_in);
-        //service(std::make_unique<sockaddr_in>()){}
-        //ervice->sin_family = AF_INET;
-        //ervice->sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+
         char str[INET_ADDRSTRLEN];
-        inet_pton(AF_INET, "127.0.0.1", &(service->sin_addr));
+        inet_pton(AF_INET, "127.0.0.1:50425", &(service->sin_addr));
         inet_ntop(AF_INET, &(service->sin_addr), str, INET_ADDRSTRLEN);
-        service->sin_port = htons(8888);
+        service->sin_port = htons(50425);
         std::cout << "ip" << str << std::endl;
-
-        std::queue<std::vector<int>> queueToSendData;
-        std::vector<int> vec1 = {1, 2, 3};
-        std::vector<int> vec2 = {4, 5, 6};
-        //queue2D.push(vec1);
-        //queue2D.push(vec2);
+        //server_udp.send_to_client(serverSocket, &clientService, *data);
 
 
-
+        if (bind(serverSocket, sockadress_structure_ptr.get(), sizeof(sockaddr_in)) == SOCKET_ERROR)
+        {
+            std::cerr << "bind failed" << std::endl;
+            closesocket(serverSocket);
+            WSACleanup();
+            exit(1);
+        }
+        std::cout << "server is listening" << std::endl;
 
     }
-} // SUDP
+
+    //void ServerUDP::send_to_client(SOCKET serverSocket, sockaddr_in *clientService, XPC::JoysticksData *data)
+    //{
+
+      //  sendto(serverSocket, reinterpret_cast<char*>(data), sizeof(XPC::JoysticksData), 0, (sockaddr*)clientService, sizeof(sockaddr_in));
+    //}
+
+    //std::unique_ptr<sockaddr_in> ServerUDP::create_socket() {return nullptr;}
+} // SUDP*
