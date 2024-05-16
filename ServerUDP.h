@@ -16,11 +16,16 @@
 
 namespace SUDP
 {
+    struct sockaddr_in clientAddress
+    {
+        char* clientIP = "192.168.1.1"; ///here you must hardcode client adress
+        int clientPort = 8888; ///here you must hardcode client port
+    };
 
     class ServerUDP
     {
     public:
-        void send_to_client(SOCKET serverSocket, sockaddr_in* clientService, XPC::JoysticksData* data);
+        static void send_to_client(SOCKET serverSocket, sockaddr_in* clientService, XPC::JoysticksData* data);
 
 
 

@@ -13,8 +13,9 @@
 
 namespace SUDP
 {
-    void ServerUDP::send_to_client(SOCKET serverSocket, sockaddr_in *clientService, XPC::JoysticksData *data)
+    void ServerUDP::send_to_client(SOCKET serverSocket, sockaddr_in *clientService, XPC::JoysticksData *data) //cos z tym trzeba zrobic, to dopiero szkic w którym kierunku mamy iść
     {
+        sendto(serverSocket, reinterpret_cast<char*>(data), sizeof(XPC::JoysticksData), 0, (sockaddr*)clientService, sizeof(sockaddr_in));
     }
 
     ServerUDP::ServerUDP()
